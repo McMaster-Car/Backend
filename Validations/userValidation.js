@@ -5,7 +5,7 @@ const userValidation = {
     const schema = Joi.object({
       username: Joi.string().required(),
       email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
+      password: Joi.string().required(),
       address: Joi.string(),
       contact_no: Joi.string(),
       isAdmin: Joi.boolean(),

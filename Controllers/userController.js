@@ -17,7 +17,7 @@ const userController = {
     
       return res.status(201).json({success : true , message: 'User registered successfully', user: newUser });
     } catch (error) {
-      return res.status(500).json({ success : false , message: 'Internal Server Error', error: error.message });
+      return res.status(500).json({ success : false , message: error.message, error: error.message });
     }
   },
 
@@ -32,7 +32,7 @@ const userController = {
       const { user, token } = await userService.loginUser(req.body.email, req.body.password);
 
      
-      return res.status(200).json({ success : true , token, user: { username: user.username, email: user.email } });
+      return res.status(200).json({ success : true , token, user: { username: user.username, email: user.email , isAdmin : user.isAdmin } });
     } catch (error) {
       return res.status(401).json({  success : false ,message: 'Invalid credentials', error: error.message });
     }
