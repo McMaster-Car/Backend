@@ -12,6 +12,11 @@ UserRouter.get('/view-profile',
     verifyToken, 
     userController.viewProfile);
 
+UserRouter.get('/getUsers', 
+  //  verifyToken,  for now no user verification
+    userController.getUsers);
+    
+
 UserRouter.put('/edit-profile', 
     verifyToken, 
     userController.editProfile);

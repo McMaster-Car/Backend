@@ -52,6 +52,32 @@ const userController = {
     }
   },
 
+  getUsers: async (req, res) => {
+    try {
+
+      
+      const users = await userService.viewUsers();
+
+
+      const finalizedUsers = users.map((user)=>{
+
+          return {
+            id : user._id,
+            name :  user.username,
+            email : user.email,
+            address : user.address,
+            isAdmin : user.isAdmin,
+            contact_no : user.contact_no
+          }
+
+      })
+
+      return res.status(200).json({ success : true , Users: finalizedUsers});
+    } catch (error) {
+      return res.status(500).json({ success : false , message: 'Internal Server Error', error: error.message });
+    }
+  },
+
   editProfile: async (req, res) => {
     try {
       

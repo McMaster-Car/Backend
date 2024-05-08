@@ -54,6 +54,14 @@ const userService = {
       throw new Error('Unable to fetch user profile');
     }
   },
+  viewUsers: async () => {
+    try {
+      const user = await User.find();
+      return user;
+    } catch (error) {
+      throw new Error('Unable to fetch users');
+    }
+  },
 
   editProfile: async (userId, updatedData) => {
     try {
