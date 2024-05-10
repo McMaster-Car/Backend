@@ -11,8 +11,8 @@ const {
     connectRoute
 } = require("./Router/index");
 
-const uri = process.env.DATABASE_URL || "mongodb://localhost:27017/macMaster-Car";
-// const uri =  "mongodb://localhost:27017/macMaster-Car";
+// const uri = process.env.DATABASE_URL || "mongodb://localhost:27017/macMaster-Car";
+const uri =  "mongodb://localhost:27017/macMaster-Car";
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
