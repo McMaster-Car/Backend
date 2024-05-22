@@ -1,16 +1,9 @@
 const ProductsRouter = require("express").Router();
-const productController = require('../../Controllers/productController');
+const productController = require('../../Controllers/product.controller');
 
-
-
-
-
-ProductsRouter.get('/view-products',productController.viewProducts);
-ProductsRouter.get('/view-product/:part_number',productController.viewProduct);
+ProductsRouter.get('/view-products',productController.getAllProducts);
 ProductsRouter.post('/add-product',productController.addProduct);
-ProductsRouter.delete('/delete-product/:id',productController.deleteProduct);
-
-
-
 
 module.exports = ProductsRouter;
+
+
