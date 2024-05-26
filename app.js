@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 connectRoute(app);
 
 app.get("/", (req, res) => {
-  res.send("Server is Running");
+  res.send("Mac Master Backend is Running");
 });
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
