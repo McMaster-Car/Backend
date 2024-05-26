@@ -5,19 +5,19 @@ const categoryRouter = require("./Category/index.js");
 
 const routes = [
     {
-        path: "/user",
+        path: "/api/user",
         handler: UserRouter,
     },
     {
-        path: "/products",
+        path: "/api/products",
         handler: ProductsRouter,
     },
     {
-        path: "/attributes",
+        path: "/api/attributes",
         handler: AttributeRouter,
     },
     {
-        path: "/categories",
+        path: "/api/categories",
         handler: categoryRouter,
     },
 ];
