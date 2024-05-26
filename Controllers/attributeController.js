@@ -23,6 +23,7 @@ const attributeController = {
   addValueToAttribute: async (req, res) => {
     try {
       const { name, value } = req.body;
+      
       const updatedAttribute = await attributeService.addValueToAttribute(name, value);
       return res.status(200).json({ success: true, attribute: updatedAttribute });
     } catch (error) {

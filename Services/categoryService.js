@@ -15,7 +15,7 @@ const categoryService = {
       const category = new Category(categoryData);
       return await category.save();
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error);
     }
   }
 };
