@@ -1,4 +1,3 @@
-// product.model.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -16,15 +15,18 @@ const ProductSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Attribute'
     },
-    value: {
-      type: String,
-      required: true
+    values: {
+      type: [String]
     }
   }],
   categories: [{
     type: Schema.Types.ObjectId,
     ref: 'Category'
-  }]   
+  }],
+  variations: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Variation'
+  }]
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

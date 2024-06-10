@@ -1,53 +1,117 @@
 // product.service.js
 const Product = require('../Model/Products');
 const Attribute = require('../Model/Attributes');
+const Variation = require('../Model/Variations')
 
 const productService = {
   getAllProducts: async () => {
     try {
       const products = await Product.find()
         .populate({
-          path: 'categories',
-          populate: {
-            path: 'parentCategory',
-            select: 'name'
-          },
-          select: 'name parentCategory'
+          path: 'attributes.attributeId',
+          model: 'Attribute'
         })
-        .lean();
-
-      // Populate attributes with specific values
-      for (const product of products) {
-        for (const attribute of product.attributes) {
-          const attributeData = await Attribute.findById(attribute.attributeId, 'name').lean();
-          attribute.name = attributeData.name;
-        }
-      }
-
-      return products;
+        .populate('categories')
+        .populate('variations')
+        .exec();
+  
+      return products.map(product => {
+        const attributes = product.attributes.map(attr => {
+          const attribute = attr.attributeId;
+          return {
+            attributeId: attribute._id,
+            attributeName: attribute.name, // Assuming your Attribute model has a name field
+            values: attr.values
+          };
+        });
+  
+        return {
+          ...product.toObject(),
+          attributes
+        };
+      });
     } catch (error) {
       throw new Error(error.message);
     }
   },
+  getEveryProduct : async () => {
+    try {
+      const products = await Product.find()
+        .populate({
+          path: 'attributes.attributeId',
+          model: 'Attribute'
+        })
+        .populate('categories')
+        .populate('variations')
+        .exec();
+  
+      const expandedProducts = [];
+  
+      products.forEach(product => {
+        product.variations.forEach(variation => {
+          const productAttributes = product.attributes.map(attr => {
+            return {
+              attributeId: attr.attributeId._id,
+              attributeName: attr.attributeId.name, // Assuming your Attribute model has a name field
+              values: attr.values
+            };
+          });
+  
+          const variationAttributes = variation.attributes.map(varAttr => {
+            const attribute = productAttributes.find(attr => attr.attributeId.equals(varAttr.attributeId));
+            return {
+              attributeId: varAttr.attributeId,
+              attributeName: attribute ? attribute.attributeName : '',
+              value: varAttr.value
+            };
+          });
+  
+          expandedProducts.push({
+            _id: product._id,
+            name: product.name,
+            description: product.description,
+            categories: product.categories,
+            variation: {
+              _id: variation._id,
+              attributes: variationAttributes,
+              retailPrice: variation.retailPrice,
+              salePrice: variation.salePrice,
+              stockQuantity: variation.stockQuantity,
+              isStockAvailable: variation.isStockAvailable,
+              picture: variation.picture,
+              weight: variation.weight,
+              dimensions: variation.dimensions
+            }
+          });
+        });
+      });
+  
+      return expandedProducts;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+
   addProduct: async (productData) => {
     try {
-      for (const attr of productData.attributes) {
-        const attribute = await Attribute.findById(attr.attributeId);
-        if (!attribute) {
-          throw new Error(`Invalid attribute with ID ${attr.attributeId}`);
-        }
-        if (!attribute.values.includes(attr.value)) {
-          attribute.values.push(attr.value);
-          await attribute.save();
-        }
+     
+
+      const variationIds = [];
+      for (const variationData of productData.variations) {
+        const variation = new Variation(variationData);
+        await variation.save();
+        variationIds.push(variation._id);
       }
 
-      const product = new Product(productData);
+      delete productData.variations;
+
+      const product = new Product({ ...productData, variations: variationIds });
       return await product.save();
     } catch (error) {
       throw new Error(error.message);
     }
   },
 };
+
 
 module.exports = productService;
