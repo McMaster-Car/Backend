@@ -40,9 +40,13 @@ const VariationSchema = new Schema({
     H: {
       type: Schema.Types.Mixed,
     },
+  },
+  others: {
+    type: Map,
+    of: Schema.Types.Mixed
   }
 });
 
 const Variation = mongoose.model('Variation', VariationSchema);
 
-module.exports = Variation 
+module.exports = Variation;

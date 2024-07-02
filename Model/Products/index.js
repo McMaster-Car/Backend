@@ -10,6 +10,10 @@ const ProductSchema = new Schema({
     type: String,
     default: ''
   },
+  SKU: {
+    type: String,
+    default: ''
+  },
   attributes: [{
     attributeId: {
       type: Schema.Types.ObjectId,
