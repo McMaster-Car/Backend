@@ -1,5 +1,4 @@
 const productService = require('../Services/productService');
-const fs = require('fs');
 
 const productController = {
   getAllProducts: async (req, res) => {
