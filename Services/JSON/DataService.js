@@ -36,32 +36,38 @@ const CSVtoJSON = (filePath) => {
     return xlsx.utils.sheet_to_json(sheet);
   };
 
-  
-const dataService = {
+  const dataService = {
     DataUpload: async (filePath, mimeType) => {
-        let data;
-      
-        try {
-          // Parse the file based on its MIME type
-          if (mimeType === 'text/csv') {
-            data = await CSVtoJSON(filePath);
-          } else if (mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-            data = await ExceltoJSON(filePath);
-          } else {
-            throw new Error('Unsupported file format');
-          }
-        
-        if(data != undefined)
-            await createProductWithVariations(data)
-        
-          return 'data added';
-        } catch (error) {
-          console.error('Error processing file:', error);
-          throw error;
+      let data;
+  
+      try {
+        // Parse the file based on its MIME type
+        if (mimeType === 'text/csv') {
+          data = await CSVtoJSON(filePath);
+        } else if (mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+          data = await ExceltoJSON(filePath);
+        } else {
+          throw new Error('Unsupported file format');
         }
-      },
+  
+        if (data && data.length > 0) {
+          // Split data into chunks of 50
+          const chunkSize = 10;
+          for (let i = 0; i < data.length; i += chunkSize) {
 
-  }
-
+            const chunk = data.slice(i, i + chunkSize);
+          console.log("data to be added is from " , i , " to " , i+chunkSize)
+            await createProductWithVariations(chunk);
+          }
+        }
+  
+        return 'data added';
+      } catch (error) {
+        console.error('Error processing file:', error);
+        throw error;
+      }
+    },
+  };
+  
 
   module.exports = dataService;
