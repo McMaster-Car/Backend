@@ -8,7 +8,6 @@ const upload = multer({ dest: 'uploads/' });
 ProductsRouter.get('/view-products',productController.getAllProducts);
 ProductsRouter.get('/all-products',productController.getEveryProduct);
 ProductsRouter.post('/add-product',productController.addProduct);
-ProductsRouter.post('/upload', upload.single('file'), productController.uploadBulkProducts);
 
 
 module.exports = ProductsRouter;
