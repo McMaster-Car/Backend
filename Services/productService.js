@@ -50,6 +50,7 @@ const productService = {
         })
         .populate('categories')
         .populate('variations')
+        .limit(500)
         .exec();
   
       const expandedProducts = [];
