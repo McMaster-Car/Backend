@@ -2,6 +2,7 @@ const UserRouter = require("./User/index.js");
 const ProductsRouter = require("./Products/index.js")
 const AttributeRouter = require("./Attribute/index.js");
 const categoryRouter = require("./Category/index.js");
+const OrderRouter = require("./Order/index.js");
 
 const routes = [
     {
@@ -20,6 +21,11 @@ const routes = [
         path: "/api/categories",
         handler: categoryRouter,
     },
+    {
+        path: "/api/order",
+        handler: OrderRouter,
+    },
+    
 ];
 
 exports.connectRoute = (app) => {

@@ -6,6 +6,7 @@ const ProductSchema = new Schema({
     type: String,
     required: true
   },
+
   description: {
     type: String,
     default: ''
@@ -13,6 +14,10 @@ const ProductSchema = new Schema({
   SKU: {
     type: String,
     default: ''
+  },
+  Parent_Product_ID: {
+    type: Number,
+    default: null
   },
   attributes: [{
     attributeId: {

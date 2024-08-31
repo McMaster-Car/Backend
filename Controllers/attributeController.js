@@ -10,6 +10,16 @@ const attributeController = {
       return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
     }
   },
+  deleteOneAttribute: async (req, res) => {
+    try {
+      var id = req.params.id
+      const DeleteAttributes = await attributeService.deleteAttribute(id);
+      return res.status(200).json({ success: DeleteAttributes.success, message :  DeleteAttributes.message }); 
+      
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    }
+  },
 
   addAttribute: async (req, res) => {
     try {
@@ -29,7 +39,17 @@ const attributeController = {
     } catch (error) {
       return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
     }
-  }
+  },
+  updateInfo : async (req, res) => {
+    try {
+      const { name, info } = req.body;
+      
+      const updatedAttribute = await attributeService.updateAttributeInfo(name, info);
+      return res.status(200).json({ success: updatedAttribute.success, message: updatedAttribute.message });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    }
+  },
 };
 
 module.exports = attributeController;

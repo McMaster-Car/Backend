@@ -7,6 +7,10 @@ const AttributeSchema = new Schema({
     required: true,
     unique: true,
   },
+  info:{
+    type: String,
+    default : ""
+  },
   values: {
     type: [String]
   },
