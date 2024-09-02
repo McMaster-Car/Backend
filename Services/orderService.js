@@ -4,39 +4,58 @@ const Variation = require('../Model/Variations');
 
 // Create a new order
 async function createOrder(orderData) {
-    const { name, address, products } = orderData;
-    let totalPrice = 0;
+  const { name, address, products } = orderData;
+  let totalPrice = 0;
 
-    for (const product of products) {
-        const variation = await Variation.findById(product.variationId);
-        if (!variation) throw new Error('Invalid variation ID');
+  for (const product of products) {
+      const variation = await Variation.findById(product.variationId);
+      if (!variation) {
+          throw new Error('Invalid variation ID');
+      }
 
-        // Check and handle stockQuantity
-        if (variation.stockQuantity === undefined || variation.stockQuantity === null) {
-            variation.stockQuantity = product.quantity;
-        }
+      // Check if stockQuantity is zero
+      if (variation.stockQuantity === 0) {
+          // Find the "Pkg Qty" attribute
+          const pkgQtyAttribute = variation.attributes.find(attr => 
+              attr.attributeId.toString() === "66af8d46db18ba6ac3387f92"
+          );
 
-        // Subtract the stock quantity
-        if (variation.stockQuantity < product.quantity) {
-            throw new Error('Insufficient stock for variation ID: ' + product.variationId);
-        }
+          if (pkgQtyAttribute && pkgQtyAttribute.value) {
+              const pkgQty = parseInt(pkgQtyAttribute.value.trim());
 
-        variation.stockQuantity -= product.quantity;
-        await variation.save();
+              // Check if package quantity is sufficient
+              if (pkgQty >= product.quantity) {
+                  variation.stockQuantity = pkgQty - product.quantity;
+              } else {
+                  throw new Error('Insufficient stock for variation ID: ' + product.variationId);
+              }
+          } else {
+              throw new Error('Pkg Qty attribute not found or invalid for variation ID: ' + product.variationId);
+          }
+      } else {
+          // Subtract the stock quantity if stockQuantity is not zero
+          if (variation.stockQuantity < product.quantity) {
+              throw new Error('Insufficient stock for variation ID: ' + product.variationId);
+          }
+          variation.stockQuantity -= product.quantity;
+      }
 
-        // Accumulate the total price
-        totalPrice += product.price * product.quantity;
-    }
+      await variation.save();
 
-    const order = new Order({
-        name,
-        address,
-        products,
-        totalPrice,  // Make sure totalPrice is correctly assigned here
-    });
+      // Accumulate the total price
+      totalPrice += product.price * product.quantity;
+  }
 
-    return await order.save();
+  const order = new Order({
+      name,
+      address,
+      products,
+      totalPrice,
+  });
+
+  return await order.save();
 }
+
 
 
 

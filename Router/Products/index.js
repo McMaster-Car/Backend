@@ -1,5 +1,6 @@
 const ProductsRouter = require("express").Router();
 const productController = require('../../Controllers/product.controller');
+const productService = require("../../Services/productService");
 
 
 ProductsRouter.get('/view-products',productController.getAllProducts);
@@ -9,6 +10,10 @@ ProductsRouter.post('/add-product',productController.addProduct);
 ProductsRouter.put('/editProductData/:id',productController.editProductData);
 ProductsRouter.put('/editVariationData/:id',productController.editVariationData);
 ProductsRouter.delete('/delete-product/:id',productController.deleteOneProduct);
+
+//Service to get Product ID
+ProductsRouter.get('/get-product-using-variation/:id',productService.getProductThroughVariation);
+
 
 
 

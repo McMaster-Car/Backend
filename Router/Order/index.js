@@ -5,7 +5,8 @@ const orderService = require('../../Services/orderService');
 // Create a new order
 OrderRouter.post('/createOrder', async (req, res) => {
   try {
-    const order = await orderService.createOrder(req.body);
+    
+    const order = await orderService.createOrder(req.body.orderData);
     res.status(201).json(order);
   } catch (err) {
     res.status(400).json({ message: err.message });

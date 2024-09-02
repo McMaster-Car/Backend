@@ -248,6 +248,26 @@ const productService = {
       return false;
     }
   },
+  getProductThroughVariation : async (req, res) => {
+    try {
+      const  variationId  = req.params.id;
+  
+      if (!variationId) {
+        return res.status(400).send({ error: 'variationId is required' });
+      }
+  
+      // Find the product with the given variationId
+      const product = await Product.findOne({ variations: variationId });
+  
+      if (!product) {
+        return res.status(404).send({ error: 'Product not found' });
+      }
+  
+      res.status(200).send({ productId: product._id , productName : product.name , description : product.description });
+    } catch (error) {
+      res.status(500).send({ error: 'Server error' });
+    }
+  },
   deleteProduct: async (productId) => {
     try {
       const deletedProduct = await Product.findByIdAndDelete(productId);
